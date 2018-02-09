@@ -1,0 +1,38 @@
+{
+    "name": "siqwell/omnipay-coinpayments",
+    "type": "library",
+    "description": "Coinpayments gateway for Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "CoinPayments",
+        "purchase"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Denis Lipatov",
+            "email": "yagunij@gmail.com"
+        }
+    ],
+	"autoload": {
+        "psr-4": {
+            "Omnipay\\CoinPayments\\": "src/"
+        }
+    },
+    "require": {
+        "omnipay/common": "~2.0"
+    },
+    "require-dev": {
+        "omnipay/tests": "~2.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev"
+}
