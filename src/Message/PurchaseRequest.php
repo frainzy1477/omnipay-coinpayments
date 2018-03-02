@@ -155,6 +155,7 @@ class PurchaseRequest extends AbstractRequest
         $data['buyer_email'] = $this->getBuyerEmail();
         $data['buyer_name'] = $this->getBuyerName();
         $data['item_name'] = $this->getItemName();
+        $data['ipn_url'] = $this->getNotifyUrl();
 
         return $data;
     }
