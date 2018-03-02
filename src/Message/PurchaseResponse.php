@@ -6,29 +6,26 @@ use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 use Omnipay\Common\Message\RequestInterface;
 
-class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
+/**
+ * Class PurchaseResponse
+ * @package Omnipay\CoinPayments\Message
+ */
+class PurchaseResponse extends Response implements RedirectResponseInterface
 {
-    protected $redirectUrl;
-
     /**
-     * PurchaseResponse constructor.
-     *
-     * @param RequestInterface $request
-     * @param                  $data
-     * @param                  $redirectUrl
-     */
-    public function __construct(RequestInterface $request, $data, $redirectUrl)
-    {
-        parent::__construct($request, $data);
-        $this->redirectUrl = $redirectUrl;
-    }
-
-    /**
-     * @return bool|mixed
+     * @return bool
      */
     public function isSuccessful()
     {
-        return $this->data;
+        return $this->data['error'] === 'ok';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->data['result']['txn_id'];
     }
 
     /**
@@ -36,7 +33,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function isRedirect()
     {
-        return false;
+        return !empty($this->data['result']['status_url']);
     }
 
     /**
@@ -44,22 +41,6 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function getRedirectUrl()
     {
-        return $this->redirectUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRedirectMethod()
-    {
-        return 'POST';
-    }
-
-    /**
-     * @return array|mixed
-     */
-    public function getRedirectData()
-    {
-        return $this->data;
+        return $this->data['result']['status_url'];
     }
 }

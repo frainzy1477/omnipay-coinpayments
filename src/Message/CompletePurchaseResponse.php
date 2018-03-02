@@ -5,6 +5,10 @@ namespace Omnipay\CoinPayments\Message;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 
+/**
+ * Class CompletePurchaseResponse
+ * @package Omnipay\CoinPayments\Message
+ */
 class CompletePurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
     /**
@@ -12,7 +16,7 @@ class CompletePurchaseResponse extends AbstractResponse implements RedirectRespo
      */
     public function isSuccessful()
     {
-        return ($this->data['m_status'] == 'success') ? true : false;
+        return ($this->data['status'] >= 100 || $this->data['status'] == 2) ? true : false;
     }
 
     /**
@@ -20,7 +24,7 @@ class CompletePurchaseResponse extends AbstractResponse implements RedirectRespo
      */
     public function isCancelled()
     {
-        return ($this->data['m_status'] != 'success') ? true : false;
+        return ($this->data['status'] < 0) ? true : false;
     }
 
     /**
@@ -60,7 +64,7 @@ class CompletePurchaseResponse extends AbstractResponse implements RedirectRespo
      */
     public function getTransactionId()
     {
-        return intval($this->data['m_orderid']);
+        return intval($this->data['txn_id']);
     }
 
     /**
@@ -68,7 +72,7 @@ class CompletePurchaseResponse extends AbstractResponse implements RedirectRespo
      */
     public function getAmount()
     {
-        return floatval($this->data['m_amount']);
+        return floatval($this->data['amount1']);
     }
 
     /**
@@ -76,7 +80,7 @@ class CompletePurchaseResponse extends AbstractResponse implements RedirectRespo
      */
     public function getCurrency()
     {
-        return $this->data['m_curr'];
+        return $this->data['currency1'];
     }
 
     /**

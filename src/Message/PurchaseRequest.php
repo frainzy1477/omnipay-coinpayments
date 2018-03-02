@@ -2,26 +2,12 @@
 
 namespace Omnipay\CoinPayments\Message;
 
+/**
+ * Class PurchaseRequest
+ * @package Omnipay\CoinPayments\Message
+ */
 class PurchaseRequest extends AbstractRequest
 {
-    /**
-     * @return mixed
-     */
-    public function getMerchantId()
-    {
-        return $this->getParameter('merchant_id');
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \Omnipay\Common\Message\AbstractRequest
-     */
-    public function setMerchantId($value)
-    {
-        return $this->setParameter('merchant_id', $value);
-    }
-
     /**
      * @return mixed
      */
@@ -78,30 +64,110 @@ class PurchaseRequest extends AbstractRequest
 
     /**
      * @return mixed
+     */
+	public function getCurrency2()
+    {
+        return $this->getParameter('currency2');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function setCurrency2($value)
+    {
+        return $this->setParameter('currency2', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuyerEmail()
+    {
+        return $this->getParameter('buyer_email');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function setBuyerEmail($value)
+    {
+        return $this->setParameter('buyer_email', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuyerName()
+    {
+        return $this->getParameter('buyer_name');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function setBuyerName($value)
+    {
+        return $this->setParameter('buyer_name', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemName()
+    {
+        return $this->getParameter('item_name');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function setItemName($value)
+    {
+        return $this->setParameter('item_name', $value);
+    }
+
+    /**
+     * @return mixed
      * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     public function getData()
     {
-        $this->validate('merchant_id', 'private_key', 'public_key', 'ipn_secret');
+        $this->validate('private_key', 'public_key', 'ipn_secret');
 
-        $data['cmd'] = '_pay_simple';
-        $data['reset'] = 1;
-        $data['merchant'] = $this->getMerchantId();
-        $data['currency'] = $this->getCurrency();
-        $data['amountf'] = $this->getAmount();
-        $data['item_name'] = $this->getDescription();
-        $data['cancel_url'] = $this->getCancelUrl();
-        //dump($this->getParameters());
+        $data['version'] = 1;
+        $data['cmd'] = 'create_transaction';
+        $data['key'] = $this->getPublicKey();
+        $data['private_key'] = $this->getPrivateKey();
+        $data['format'] = 'json'; //supported values are json and xml
+
+		$data['amount'] = $this->getAmount();
+		$data['currency1'] = $this->getCurrency();
+		$data['currency2'] = $this->getCurrency2();
+
+        $data['buyer_email'] = $this->getBuyerEmail();
+        $data['buyer_name'] = $this->getBuyerName();
+        $data['item_name'] = $this->getItemName();
+
         return $data;
     }
 
     /**
      * @param mixed $data
      *
-     * @return PurchaseResponse|\Omnipay\Common\Message\ResponseInterface
+     * @return APIPurchaseResponse|\Omnipay\Common\Message\ResponseInterface
      */
     public function sendData($data)
     {
-        return $this->response = new PurchaseResponse($this, $data, $this->getMerchantEndpoint());
+        $httpResponse = $this->sendRequest('POST', $data);
+
+        return $this->response = new PurchaseResponse($this, $httpResponse->json(), $this->getMerchantEndpoint());
     }
 }

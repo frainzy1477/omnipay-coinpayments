@@ -4,14 +4,36 @@ namespace Omnipay\CoinPayments\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
 
+/**
+ * Class CompletePurchaseRequest
+ * @package Omnipay\CoinPayments\Message
+ */
 class CompletePurchaseRequest extends AbstractRequest
 {
     /**
      * @return mixed
      */
-    public function getShopSecret()
+    public function getMerchantId()
     {
-        return $this->getParameter('shop_secret');
+        return $this->getParameter('merchant_id');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setMerchantId($value)
+    {
+        return $this->setParameter('merchant_id', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIpnSecret()
+    {
+        return $this->getParameter('ipn_secret');
     }
 
     /**
@@ -19,9 +41,9 @@ class CompletePurchaseRequest extends AbstractRequest
      *
      * @return \Omnipay\Common\Message\AbstractRequest
      */
-    public function setShopSecret($value)
+    public function setIpnSecret($value)
     {
-        return $this->setParameter('shop_secret', $value);
+        return $this->setParameter('ipn_secret', $value);
     }
 
     /**
@@ -30,35 +52,36 @@ class CompletePurchaseRequest extends AbstractRequest
      */
     public function getData()
     {
-        if ($this->httpRequest->request->get('m_curr') != $this->getCurrency()) {
-            throw new InvalidResponseException("Invalid m_curr:".$this->httpRequest->request->get('m_curr'));
+        if ($this->httpRequest->request->get('currency1') != $this->getCurrency()) {
+            throw new InvalidResponseException('Invalid currency');
         }
 
-        if ($this->httpRequest->request->get('m_status') != 'success') {
-            throw new InvalidResponseException("Invalid m_status:".$this->httpRequest->request->get('m_status'));
+        if ($this->httpRequest->request->get('amount1') < $this->getAmount()) {
+            throw new InvalidResponseException('Invalid amount');
         }
 
-        $arHash = [
-            $this->httpRequest->request->get('m_operation_id'),
-            $this->httpRequest->request->get('m_operation_ps'),
-            $this->httpRequest->request->get('m_operation_date'),
-            $this->httpRequest->request->get('m_operation_pay_date'),
-            $this->httpRequest->request->get('m_shop'),
-            $this->httpRequest->request->get('m_orderid'),
-            $this->httpRequest->request->get('m_amount'),
-            $this->httpRequest->request->get('m_curr'),
-            $this->httpRequest->request->get('m_desc'),
-            $this->httpRequest->request->get('m_status'),
-            $this->getShopSecret(),
-        ];
-        $sign_hash = strtoupper(hash('sha256', implode(':', $arHash)));
-
-        if ($this->httpRequest->request->get('m_sign') != $sign_hash) {
-            throw new InvalidResponseException("Invalid m_sign");
+        if (!isset($_POST['ipn_mode']) || $_POST['ipn_mode'] != 'hmac') {
+            throw new InvalidResponseException('IPN Mode is not HMAC');
         }
 
-        echo $this->httpRequest->request->get('m_orderid').'|success';
-        
+        if (!isset($_SERVER['HTTP_HMAC']) || empty($_SERVER['HTTP_HMAC'])) {
+            throw new InvalidResponseException('No HMAC signature sent.');
+        }
+
+        $request = file_get_contents('php://input');
+        if ($request === FALSE || empty($request)) {
+            throw new InvalidResponseException('Error reading POST data');
+        }
+
+        if (!isset($_POST['merchant']) || $_POST['merchant'] != $this->getMerchantId()) {
+            throw new InvalidResponseException('No or incorrect Merchant ID passed');
+        }
+
+        $hmac = hash_hmac("sha512", $request, $this->getIpnSecret());
+        if (!hash_equals($hmac, $_SERVER['HTTP_HMAC'])) {
+            throw new InvalidResponseException('HMAC signature does not match');
+        }
+
         return $this->httpRequest->request->all();
     }
 

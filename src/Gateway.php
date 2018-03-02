@@ -5,7 +5,8 @@ namespace Omnipay\CoinPayments;
 use Omnipay\Common\AbstractGateway;
 
 /**
- * Gateway Class
+ * Class Gateway
+ * @package Omnipay\CoinPayments
  */
 class Gateway extends AbstractGateway
 {
@@ -15,6 +16,19 @@ class Gateway extends AbstractGateway
     public function getName()
     {
         return 'CoinPayments';
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultParameters()
+    {
+        return array(
+            'merchant_id' => '',
+            'private_key' 	=> '',
+            'public_key' => '',
+            'ipn_secret' 	=> ''
+        );
     }
 
     /**
@@ -90,26 +104,13 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @return array
-     */
-    public function getDefaultParameters()
-    {
-        return [
-            'merchant_id' => '',
-            'private_key' 	=> '',
-            'public_key' => '',
-            'ipn_secret' 	=> ''
-        ];
-    }
-
-    /**
      * @param array $parameters
      *
      * @return \Omnipay\Common\Message\AbstractRequest|\Omnipay\Common\Message\RequestInterface
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\CoinPayments\Message\PurchaseRequest', $parameters);
+        return $this->createRequest(\Omnipay\CoinPayments\Message\PurchaseRequest::class, $parameters);
     }
 
     /**
@@ -119,7 +120,7 @@ class Gateway extends AbstractGateway
      */
     public function completePurchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\CoinPayments\Message\CompletePurchaseRequest', $parameters);
+        return $this->createRequest(\Omnipay\CoinPayments\Message\CompletePurchaseRequest::class, $parameters);
     }
 
     /**
@@ -129,6 +130,6 @@ class Gateway extends AbstractGateway
      */
     public function refund(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\CoinPayments\Message\RefundRequest', $parameters);
+        return $this->createRequest(\Omnipay\CoinPayments\Message\RefundRequest::class, $parameters);
     }
 }

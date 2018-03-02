@@ -4,6 +4,10 @@ namespace Omnipay\CoinPayments\Message;
 
 use Omnipay\Common\Message\AbstractRequest as OmnipayRequest;
 
+/**
+ * Class AbstractRequest
+ * @package Omnipay\CoinPayments\Message
+ */
 abstract class AbstractRequest extends OmnipayRequest
 {
     protected $liveMerchantEndpoint = 'https://www.coinpayments.net/index.php';
@@ -20,7 +24,7 @@ abstract class AbstractRequest extends OmnipayRequest
     /**
      * @return string
      */
-	protected function getApiEndpoint()
+    protected function getApiEndpoint()
     {
         return $this->liveApiEndpoint;
     }
@@ -49,9 +53,8 @@ abstract class AbstractRequest extends OmnipayRequest
      *
      * @return \Guzzle\Http\Message\Response
      */
-	public function sendRequest($method, $data = null)
+    public function sendRequest($method, $data = null)
     {
-
         $url = $this->getApiEndpoint();
         $body = $data ? http_build_query($data, '', '&') : null;
         $hmac = hash_hmac('sha512', $body, $data['private_key']);

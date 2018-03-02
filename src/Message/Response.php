@@ -5,9 +5,10 @@ namespace Omnipay\CoinPayments\Message;
 use Omnipay\Common\Message\AbstractResponse;
 
 /**
- * Coinbase Response
+ * Class Response
+ * @package Omnipay\CoinPayments\Message
  */
-class APIResponse extends AbstractResponse
+class Response extends AbstractResponse
 {
     /**
      * @return bool
@@ -40,5 +41,21 @@ class APIResponse extends AbstractResponse
 			
             return $this->data['result'];
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectMethod()
+    {
+        return 'GET';
+    }
+
+    /**
+     * @return null
+     */
+    public function getRedirectData()
+    {
+        return null;
     }
 }
