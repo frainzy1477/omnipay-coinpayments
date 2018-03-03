@@ -56,10 +56,6 @@ class CompletePurchaseRequest extends AbstractRequest
             throw new InvalidResponseException('Invalid currency');
         }
 
-        if ($this->httpRequest->request->get('amount1') < $this->getAmount()) {
-            throw new InvalidResponseException('Invalid amount');
-        }
-
         if (!isset($_POST['ipn_mode']) || $_POST['ipn_mode'] != 'hmac') {
             throw new InvalidResponseException('IPN Mode is not HMAC');
         }
@@ -68,7 +64,7 @@ class CompletePurchaseRequest extends AbstractRequest
             throw new InvalidResponseException('No HMAC signature sent.');
         }
 
-        $request = file_get_contents('php://input');
+        $request = http_build_query($this->httpRequest->request->all());
         if ($request === FALSE || empty($request)) {
             throw new InvalidResponseException('Error reading POST data');
         }
