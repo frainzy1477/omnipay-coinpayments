@@ -6,18 +6,9 @@
         "gateway",
         "merchant",
         "omnipay",
-        "pay",
-        "payment",
-        "coinpayments",
-        "purchase"
+        "coinpayments"
     ],
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Denis Lipatov",
-            "email": "yagunij@gmail.com"
-        }
-    ],
 	"autoload": {
         "psr-4": {
             "Omnipay\\CoinPayments\\": "src/"
@@ -25,6 +16,5 @@
     },
     "require": {
         "omnipay/common": "^3.0"
-    },
-    "minimum-stability": "dev"
+    }
 }
