@@ -104,6 +104,26 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setCurrency($value)
+    {
+        return $this->setParameter('currency', $value);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setCurrency2($value)
+    {
+        return $this->setParameter('currency2', $value);
+    }
+
+    /**
      * @param array $parameters
      *
      * @return \Omnipay\Common\Message\AbstractRequest|\Omnipay\Common\Message\RequestInterface
