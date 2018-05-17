@@ -59,10 +59,11 @@ abstract class AbstractRequest extends OmnipayRequest
         $body = $data ? http_build_query($data, '', '&') : null;
         $hmac = hash_hmac('sha512', $body, $data['private_key']);
 
-        $httpRequest = $this->httpClient->createRequest($method, $url, null, $body);
-        $httpRequest->setHeader('Content-Type', 'application/x-www-form-urlencoded');
-        $httpRequest->setHeader('HMAC', $hmac);
+        $httpRequest = $this->httpClient->request($method, $url, [
+            'Content-Type', 'application/x-www-form-urlencoded',
+            'HMAC', $hmac
+        ], $body);
 
-        return $httpRequest->send();
+        return $httpRequest;
     }
 }

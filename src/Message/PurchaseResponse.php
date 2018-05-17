@@ -37,10 +37,14 @@ class PurchaseResponse extends Response implements RedirectResponseInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getRedirectUrl()
     {
+        if ($this->data['result']['error'] !== 'ok') {
+            return null;
+        }
+
         return $this->data['result']['status_url'];
     }
 }
