@@ -1,10 +1,7 @@
 <?php
-
 namespace Omnipay\CoinPayments\Message;
 
-use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
-use Omnipay\Common\Message\RequestInterface;
 
 /**
  * Class PurchaseResponse
@@ -21,11 +18,11 @@ class PurchaseResponse extends Response implements RedirectResponseInterface
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getTransactionId()
     {
-        return optional($this->data['result'])->txn_id;
+        return $this->data['result']['txn_id'] ?? null;
     }
 
     /**
@@ -33,7 +30,7 @@ class PurchaseResponse extends Response implements RedirectResponseInterface
      */
     public function isRedirect()
     {
-        return optional($this->data['result'])->status_url;
+        return isset($this->data['result']['status_url']);
     }
 
     /**
@@ -41,6 +38,6 @@ class PurchaseResponse extends Response implements RedirectResponseInterface
      */
     public function getRedirectUrl()
     {
-        return optional($this->data['result'])->status_url;
+        return $this->data['result']['status_url'] ?? null;
     }
 }
