@@ -25,7 +25,7 @@ class PurchaseResponse extends Response implements RedirectResponseInterface
      */
     public function getTransactionId()
     {
-        return $this->data['result']['txn_id'];
+        return optional($this->data['result'])->txn_id;
     }
 
     /**
@@ -33,7 +33,7 @@ class PurchaseResponse extends Response implements RedirectResponseInterface
      */
     public function isRedirect()
     {
-        return !empty($this->data['result']['status_url']);
+        return optional($this->data['result'])->status_url;
     }
 
     /**
@@ -41,10 +41,6 @@ class PurchaseResponse extends Response implements RedirectResponseInterface
      */
     public function getRedirectUrl()
     {
-        if ($this->data['result']['error'] !== 'ok') {
-            return null;
-        }
-
-        return $this->data['result']['status_url'];
+        return optional($this->data['result'])->status_url;
     }
 }
