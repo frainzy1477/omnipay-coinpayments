@@ -65,7 +65,7 @@ class CompletePurchaseRequest extends AbstractRequest
         }
 
         $request = http_build_query($this->httpRequest->request->all());
-        if ($request === FALSE || empty($request)) {
+        if ($request === false || empty($request)) {
             throw new InvalidResponseException('Error reading POST data');
         }
 
