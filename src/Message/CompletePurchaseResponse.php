@@ -16,7 +16,7 @@ class CompletePurchaseResponse extends AbstractResponse implements RedirectRespo
      */
     public function isSuccessful()
     {
-        return ($this->data['status'] >= 100 || $this->data['status'] == 2 || $this->data['status'] == 1) ? true : false;
+        return ($this->data['status_text'] == 'Success') ? true : false;
     }
 
     /**
